@@ -45,7 +45,7 @@ def linguist(path: Path, rtype: bool = False) -> str | list[tuple[str, str]]:
 
 
     if rtype:
-        return lpct[0][0]
+         return lpct[0][0] if lpct and lpct[0] else "None"
 
     return lpct
 
