@@ -10,8 +10,10 @@ EXE = shutil.which("github-linguist")
 if not EXE and not RAKE:
     raise ImportError("GitHub Linguist not found, did you install it per README?")
 
+EXEC_COMMAND = ""
 if not EXE and RAKE:
-    EXE = RAKE + " exec github-linguist"
+    EXE = RAKE
+    EXEC_COMMAND = " exec github-linguist "
 
 GIT = shutil.which("git")
 if not GIT:
@@ -26,7 +28,7 @@ def linguist(path: Path, rtype: bool = False) -> str | list[tuple[str, str]]:
     if not checkrepo(path):
         return None
 
-    ret = subprocess.check_output([EXE, str(path)], text=True).split("\n")
+    ret = subprocess.check_output([EXE, EXEC_COMMAND + str(path)], text=True).split("\n")
 
     # %% parse percentage
     lpct = []
