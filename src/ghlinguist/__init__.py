@@ -4,9 +4,14 @@ import logging
 from pathlib import Path
 import shutil
 
+RAKE = shutil.which("bundle exec github-linguist")
+print(RAKE)
 EXE = shutil.which("github-linguist")
-if not EXE:
+if not EXE and not RAKE:
     raise ImportError("GitHub Linguist not found, did you install it per README?")
+
+if not EXE and RAKE:
+    EXE = RAKE
 
 GIT = shutil.which("git")
 if not GIT:
