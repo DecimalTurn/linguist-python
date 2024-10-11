@@ -5,15 +5,15 @@ from pathlib import Path
 import shutil
 
 RAKE = shutil.which("bundle")
-print("RAKE path:" + RAKE)
+print("RAKE path:" + str(RAKE))
 EXE = shutil.which("github-linguist")
 if not EXE and not RAKE:
     raise ImportError("GitHub Linguist not found, did you install it per README?")
 
-EXEC_COMMAND = ""
+EXEC_COMMAND = []
 if not EXE and RAKE:
     EXE = RAKE
-    EXEC_COMMAND = " exec github-linguist "
+    EXEC_COMMAND = ["exec", "github-linguist"]
 
 GIT = shutil.which("git")
 if not GIT:
@@ -21,14 +21,15 @@ if not GIT:
 
 
 def linguist(path: Path, rtype: bool = False) -> str | list[tuple[str, str]]:
-    """runs Github Linguist Ruby script"""
+    """runs GitHub Linguist Ruby script"""
 
     path = Path(path).expanduser()
 
     if not checkrepo(path):
         return None
 
-    ret = subprocess.check_output([EXE, EXEC_COMMAND + str(path)], text=True).split("\n")
+    command = [EXE] + EXEC_COMMAND + [str(path)]
+    ret = subprocess.check_output(command, text=True).split("\n")
 
     # %% parse percentage
     lpct = []
@@ -50,7 +51,6 @@ def linguist(path: Path, rtype: bool = False) -> str | list[tuple[str, str]]:
 
         lpct.append((lang, L[0][:-1]))
 
-
     if rtype:
          return lpct[0][0] if lpct and lpct[0] else "None"
 
@@ -68,7 +68,7 @@ def checkrepo(path: Path) -> bool:
         )
         return False
 
-    # %% detect uncommited (dirty)
+    # %% detect uncommitted (dirty)
     ret = subprocess.check_output([GIT, "-C", str(path), "status", "--porcelain"], text=True)
 
     ADD = {"A", "?"}
@@ -81,7 +81,7 @@ def checkrepo(path: Path) -> bool:
 
         if ADD.intersection(L[0]) or (MOD in L[0] and L[1] == ".gitattributes"):
             logging.warning(
-                f' {path} has uncommited changes: \n\n{ret}\n Linguist only works on files after "git commit"'
+                f' {path} has uncommitted changes: \n\n{ret}\n Linguist only works on files after "git commit"'
             )
             return False
 
