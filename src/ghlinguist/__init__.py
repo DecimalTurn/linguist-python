@@ -11,7 +11,7 @@ if not EXE and not RAKE:
     raise ImportError("GitHub Linguist not found, did you install it per README?")
 
 if not EXE and RAKE:
-    EXE = RAKE
+    EXE = RAKE + " exec github-linguist"
 
 GIT = shutil.which("git")
 if not GIT:
