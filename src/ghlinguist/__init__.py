@@ -38,15 +38,12 @@ def linguist(path: Path, rtype: bool = False) -> str | list[tuple[str, str]]:
         if not L:  # EOF
             break
             
-        lang = ""
-        # Loop over the elements of L starting from the end and append the elements until we reach the number of lines
-        for i in range(len(L) - 1, -1, -1):
+        lang = L[-1]
+        # Loop backwards from len(L)-2 and prepend elements until we reach a string that is only made of digits
+        for i in range(len(L) - 2, -1, -1):
             if L[i].isdigit():
                 break
-            if lang:
-                lang = L[i] + " " + lang
-            else:
-                lang = L[i]
+            lang = L[i] + " " + lang
 
         lpct.append((lang, L[0][:-1]))
 
