@@ -37,7 +37,7 @@ def linguist(path: Path, rtype: bool = False) -> str | list[tuple[str, str]]:
         L = line.split()
         if not L:  # EOF
             break
-            
+
         lang = L[-1]
         # Loop backwards from len(L)-2 and prepend elements until we reach a string that is only made of digits
         for i in range(len(L) - 2, -1, -1):
@@ -48,7 +48,7 @@ def linguist(path: Path, rtype: bool = False) -> str | list[tuple[str, str]]:
         lpct.append((lang, L[0][:-1]))
 
     if rtype:
-         return lpct[0][0] if lpct and lpct[0] else "None"
+        return lpct[0][0] if lpct and lpct[0] else "None"
 
     return lpct
 
